@@ -56,7 +56,7 @@ public class EmpleadoController {
 		Page<Empleado> empleados = empleadoService.findAll(pageRequest);
 		PageRender<Empleado> pageRender = new PageRender<>("/listar", empleados);
 		
-		modelo.addAttribute("titulo","Listado de empleados");
+		modelo.addAttribute("titulo","Agregar Población");
 		modelo.addAttribute("empleados",empleados);
 		modelo.addAttribute("page", pageRender);
 		
