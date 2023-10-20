@@ -12,12 +12,31 @@
     <div class="card bg-light">
         <div class="card-header" th:text="${titulo}"></div>
         <div class="card-body">
+            <div th:if="${mostrarAlerta}">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    ¡Alerta! Han transcurrido exactamente 4 meses desde el registro para al menos un habitante.
+                </div>
+            </div>
             <h4 class="card-title">
-                <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPDF}"
-                   class="btn btn-secondary">Exportar a PDF</a> <a
-                    sec:authorize="hasRole('ADMIN')" th:href="@{/exportarHabitanteExcel}"
-                    class="btn btn-success">Exportar a Excel</a>
+                <a th:href="@{/formHabitanteCalle}" class="btn btn-primary">+</a>
+                <a th:href="@{/exportarHabitanteExcel}" class="btn btn-primary">Excel</a>
             </h4>
+            <form th:action="@{/buscarHabitanteCalle}" method="get">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label class="sr-only">Filtrar:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" name="input" class="form-control mb-2" placeholder="Busqueda.." />
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" class="btn btn-success mb-2" value="Buscar"/>
+                    </div>
+                </div>
+            </form>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -30,9 +49,11 @@
                     <th>Sexo</th>
                     <th>Consecutivo</th>
                     <th>Tipo Documento</th>
-                    <th sec:authorize="hasRole('ADMIN')">Detalle</th>
+                    <th>Tipo Documento Actual</th>
+                    <th>Numero Documento Actual</th>
+                    <th>Estado</th>
                     <th sec:authorize="hasRole('ADMIN')">Editar</th>
-                    <th sec:authorize="hasRole('ADMIN')">Eliminar</th>
+                    <th sec:authorize="hasRole('ADMIN')">PDF</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,19 +67,21 @@
                     <td th:text="${habitanteCalle.sexo}"></td>
                     <td th:text="${habitanteCalle.consecutivo}"></td>
                     <td th:text="${habitanteCalle.tipoDocumento}"></td>
-                    <td><a class="btn btn-info btn-sm"
-                           th:href="@{/ver/} + ${habitanteCalle.id}">Detalles</a></td>
+                    <td th:text="${habitanteCalle.tipoDocumentoActual}"></td>
+                    <td th:text="${habitanteCalle.numeroDocumentoActual}"></td>
+                    <td>
+                        <button type="button" th:style="${habitanteCalle.alerta} ? 'background-color: red; color: white; width: 30px; height: 30px;' : 'background-color: green; color: white; width: 30px; height: 30px;'">
+                        </button>
+                    </td>
                     <td sec:authorize="hasRole('ADMIN')"><a
                             class="btn btn-warning btn-sm"
-                            th:href="@{/formHabitanteCalle/} + ${habitanteCalle.id}">Editar</a></td>
+                            th:href="@{/editHabitanteCalle/} + ${habitanteCalle.id}">Editar</a></td>
                     <td sec:authorize="hasRole('ADMIN')"><a
                             class="btn btn-danger btn-sm"
-                            th:href="@{/eliminar/} + ${habitanteCalle.id}"
-                            onclick="return confirm('¿Estás seguro de eliminar al Habitante de calle?');">Eliminar</a></td>
+                            th:href="@{/certificado/} + ${habitanteCalle.id}">PDF</a></td>
                 </tr>
                 </tbody>
             </table>
-            <nav th:replace="paginator-nav :: paginator"></nav>
         </div>
     </div>
 </div>

@@ -28,7 +28,6 @@ public class HabitanteCalle {
     @NotEmpty
     private String segundoApellido;
 
-    @NotEmpty
     private String consecutivo;
 
     @NotNull
@@ -41,6 +40,26 @@ public class HabitanteCalle {
 
     @NotEmpty
     private String tipoDocumento;
+
+    private String tipoDocumentoActual;
+
+    private String numeroDocumentoActual;
+
+    private boolean alerta;
+
+    @JoinColumn(name = "eps_id")
+    @ManyToOne
+    private Eps eps;
+
+    @JoinColumn(name = "entidad_id")
+    @ManyToOne
+    private Entidades entidades;
+
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaRegistro;
+
 
     public HabitanteCalle() { super(); }
 
@@ -107,4 +126,40 @@ public class HabitanteCalle {
     public String getTipoDocumento() {return tipoDocumento;}
 
     public void setTipoDocumento(String tipoDocumento) {this.tipoDocumento = tipoDocumento;}
+
+    public String getTipoDocumentoActual() {return tipoDocumentoActual;}
+
+    public void setTipoDocumentoActual(String tipoDocumentoActual) {this.tipoDocumentoActual = tipoDocumentoActual;}
+
+    public String getNumeroDocumentoActual() {return numeroDocumentoActual;}
+
+    public void setNumeroDocumentoActual(String numeroDocumentoActual) {this.numeroDocumentoActual = numeroDocumentoActual;}
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public boolean isAlerta() {return alerta;}
+
+    public void setAlerta(boolean alerta) {this.alerta = alerta;}
+
+    public Eps getEps() {
+        return eps;
+    }
+
+    public void setEps(Eps eps) {
+        this.eps = eps;
+    }
+
+    public Entidades getEntidades() {
+        return entidades;
+    }
+
+    public void setEntidades(Entidades entidades) {
+        this.entidades = entidades;
+    }
 }

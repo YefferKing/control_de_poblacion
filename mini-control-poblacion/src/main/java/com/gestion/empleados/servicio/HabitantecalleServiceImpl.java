@@ -83,5 +83,9 @@ public class HabitantecalleServiceImpl implements HabitantecalleService {
         }
     }
 
+    public List<HabitanteCalle> findByAtributos(String primerNombre) {
+        return habitantecalleRepository.findByAtributos(primerNombre);
+    }
+
 
 }
