@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="layout/layout :: head">
+  <meta charset="utf-8">
+</head>
+<body>
+
+<header th:replace="layout/layout :: header"></header>
+
+<div class="py-4 ml-5 mr-5">
+  <div class="card bg-light">
+    <div class="card-header" th:text="${titulo}"></div>
+    <div class="card-body">
+      <div th:if="${mostrarAlerta}">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          ¡Alerta! Han transcurrido exactamente 4 meses desde el registro para al menos un habitante.
+        </div>
+      </div>
+      <h4 class="card-title">
+        <a th:href="@{/formIndigenas}" class="btn btn-primary">+</a>
+        <a th:href="@{/exportarIndigenasExcel}" class="btn btn-primary">Excel</a>
+      </h4>
+      <form th:action="@{/buscarIndigenas}" method="get">
+        <div class="form-row align-items-center">
+          <div class="col-auto">
+            <label class="sr-only">Filtrar:</label>
+          </div>
+          <div class="col-auto">
+            <input type="text" name="input" class="form-control mb-2" placeholder="Busqueda.." />
+          </div>
+          <div class="col-auto">
+            <input type="submit" class="btn btn-success mb-2" value="Buscar"/>
+          </div>
+        </div>
+      </form>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Primer Nombre</th>
+          <th>Segundo Nombre</th>
+          <th>Primer Apellido</th>
+          <th>Segundo Apellido</th>
+          <th>Fecha de Nacimiento</th>
+          <th>Sexo</th>
+          <th>Consecutivo</th>
+          <th>Tipo Documento</th>
+          <th>Tipo Documento Actual</th>
+          <th>Numero Documento Actual</th>
+          <th>Estado</th>
+          <th sec:authorize="hasRole('ADMIN')">Editar</th>
+          <th sec:authorize="hasRole('ADMIN')">PDF</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="indigenas : ${indigenas}">
+          <td th:text="${indigenas.id}"></td>
+          <td th:text="${indigenas.primerNombre}"></td>
+          <td th:text="${indigenas.segundoNombre}"></td>
+          <td th:text="${indigenas.primerApellido}"></td>
+          <td th:text="${indigenas.segundoApellido}"></td>
+          <td th:text="${indigenas.fechaNacimiento}"></td>
+          <td th:text="${indigenas.sexo}"></td>
+          <td th:text="${indigenas.consecutivo}"></td>
+          <td th:text="${indigenas.tipoDocumento}"></td>
+          <td th:text="${indigenas.tipoDocumentoActual}"></td>
+          <td th:text="${indigenas.numeroDocumentoActual}"></td>
+          <td>
+            <button type="button" th:style="${indigenas.alerta} ? 'background-color: red; color: white; width: 30px; height: 30px;' : 'background-color: green; color: white; width: 30px; height: 30px;'">
+            </button>
+          </td>
+          <td sec:authorize="hasRole('ADMIN')"><a
+                  class="btn btn-warning btn-sm"
+                  th:href="@{/editIndigenas/} + ${indigenas.id}">Editar</a></td>
+          <td sec:authorize="hasRole('ADMIN')"><a
+                  class="btn btn-danger btn-sm"
+                  th:href="@{/certificadoIndigena/} + ${indigenas.id}">PDF</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

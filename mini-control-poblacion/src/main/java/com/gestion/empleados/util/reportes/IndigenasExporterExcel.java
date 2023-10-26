@@ -1,7 +1,7 @@
 package com.gestion.empleados.util.reportes;
 
-import com.gestion.empleados.entidades.Empleado;
 import com.gestion.empleados.entidades.HabitanteCalle;
+import com.gestion.empleados.entidades.Indigenas;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,17 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class HabitantecalleExporterExcel {
+public class IndigenasExporterExcel {
 
     private XSSFWorkbook libro;
     private XSSFSheet hoja;
 
-    private List<HabitanteCalle> listaHabitantescalle;
+    private List<Indigenas> listaIndigenas;
 
-    public  HabitantecalleExporterExcel(List<HabitanteCalle> listaHabitantescalle) {
-        this.listaHabitantescalle = listaHabitantescalle;
+    public  IndigenasExporterExcel(List<Indigenas> listaIndigenas) {
+        this.listaIndigenas = listaIndigenas;
         libro = new XSSFWorkbook();
-        hoja = libro.createSheet("HabitantesCalle");
+        hoja = libro.createSheet("Indigenas");
     }
 
     private void escribirCabeceraDeTabla() {
@@ -92,61 +92,61 @@ public class HabitantecalleExporterExcel {
         fuente.setFontHeight(14);
         estilo.setFont(fuente);
 
-        for(HabitanteCalle habitanteCalle : listaHabitantescalle) {
+        for(Indigenas indigenas : listaIndigenas) {
             Row fila = hoja.createRow(nueroFilas ++);
 
             Cell celda = fila.createCell(0);
-            celda.setCellValue(habitanteCalle.getId());
+            celda.setCellValue(indigenas.getId());
             hoja.autoSizeColumn(0);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(1);
-            celda.setCellValue(habitanteCalle.getPrimerNombre());
+            celda.setCellValue(indigenas.getPrimerNombre());
             hoja.autoSizeColumn(1);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(2);
-            celda.setCellValue(habitanteCalle.getSegundoNombre());
+            celda.setCellValue(indigenas.getSegundoNombre());
             hoja.autoSizeColumn(2);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(3);
-            celda.setCellValue(habitanteCalle.getPrimerApellido());
+            celda.setCellValue(indigenas.getPrimerApellido());
             hoja.autoSizeColumn(3);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(4);
-            celda.setCellValue(habitanteCalle.getSegundoApellido());
+            celda.setCellValue(indigenas.getSegundoApellido());
             hoja.autoSizeColumn(4);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(5);
-            celda.setCellValue(habitanteCalle.getFechaNacimiento());
+            celda.setCellValue(indigenas.getFechaNacimiento());
             hoja.autoSizeColumn(5);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(6);
-            celda.setCellValue(habitanteCalle.getSexo());
+            celda.setCellValue(indigenas.getSexo());
             hoja.autoSizeColumn(6);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(7);
-            celda.setCellValue(habitanteCalle.getConsecutivo());
+            celda.setCellValue(indigenas.getConsecutivo());
             hoja.autoSizeColumn(7);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(8);
-            celda.setCellValue(habitanteCalle.getTipoDocumento());
+            celda.setCellValue(indigenas.getTipoDocumento());
             hoja.autoSizeColumn(8);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(9);
-            celda.setCellValue(habitanteCalle.getTipoDocumentoActual());
+            celda.setCellValue(indigenas.getTipoDocumentoActual());
             hoja.autoSizeColumn(9);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(10);
-            celda.setCellValue(habitanteCalle.getNumeroDocumentoActual());
+            celda.setCellValue(indigenas.getNumeroDocumentoActual());
             hoja.autoSizeColumn(10);
             celda.setCellStyle(estilo);
         }
@@ -162,4 +162,5 @@ public class HabitantecalleExporterExcel {
         libro.close();
         outPutStream.close();
     }
+
 }
