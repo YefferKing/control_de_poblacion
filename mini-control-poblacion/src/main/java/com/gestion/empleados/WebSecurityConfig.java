@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Bean
 	protected UserDetailsService userDetailsService() {
 		UserDetails usuario1 = User
-				.withUsername("yeffer")
+				.withUsername("usuario")
 				.password("$2a$10$21k9QLX0vdSytZ36T56yHeDwn2y6DiHdJ2k7fCzccV7CuskmNQmEq")
 				.roles("USER")	
 				.build();

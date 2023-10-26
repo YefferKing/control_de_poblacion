@@ -18,8 +18,8 @@
 					<a th:href="@{/form}" class="btn btn-primary">Agregar PPL</a>
 					<a th:href="@{/form}" class="btn btn-primary">Agregar Adultos</a>
 					<a th:href="@{/form}" class="btn btn-primary">Agregar Indigenas</a>
-					<a th:href="@{/listarEps}" class="btn btn-primary">Agregar Eps</a>
-					<a th:href="@{/listarEntidades}" class="btn btn-primary">Agregar Entidad</a>
+					<a th:href="@{/listarEps}" class="btn btn-primary" sec:authorize="hasRole('ADMIN')">Agregar Eps</a>
+					<a th:href="@{/listarEntidades}" class="btn btn-primary" sec:authorize="hasRole('ADMIN')">Agregar Entidad</a>
 				</h4>
 				<img src="https://cucuta.gov.co/wp-content/uploads/2021/08/Logo-alcaldia-1.png" class="img-fluid mx-auto d-block" >
 				<h4 style="text-align: center; background-color: lightgreen; padding: 10px;">SECRETARIA DE SALUD</h4>

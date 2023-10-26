@@ -60,6 +60,8 @@ public class HabitanteCalle {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaRegistro;
 
+    private String nombreFuncionario;
+
 
     public HabitanteCalle() { super(); }
 
@@ -161,5 +163,13 @@ public class HabitanteCalle {
 
     public void setEntidades(Entidades entidades) {
         this.entidades = entidades;
+    }
+
+    public String getNombreFuncionario() {
+        return nombreFuncionario;
+    }
+
+    public void setNombreFuncionario(String nombreFuncionario) {
+        this.nombreFuncionario = nombreFuncionario;
     }
 }
