@@ -1,12 +1,15 @@
 package com.gestion.empleados.controlador;
 
+import com.gestion.empleados.entidades.Adultos;
 import com.gestion.empleados.entidades.Entidades;
 import com.gestion.empleados.entidades.Eps;
 import com.gestion.empleados.entidades.Indigenas;
+import com.gestion.empleados.servicio.AdultosService;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
 import com.gestion.empleados.servicio.IndigenasService;
 import com.gestion.empleados.util.paginacion.PageRender;
+import com.gestion.empleados.util.reportes.AdultosExporterExcel;
 import com.gestion.empleados.util.reportes.IndigenasExporterExcel;
 import com.lowagie.text.DocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -43,10 +46,10 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class IndigenasController {
+public class AdultosController {
 
     @Autowired
-    private IndigenasService indigenasService;
+    private AdultosService adultosService;
 
     @Autowired
     private EpsService epsService;
@@ -54,12 +57,12 @@ public class IndigenasController {
     @Autowired
     private EntidadesService entidadesService;
 
-    @GetMapping("/certificadoIndigena/{id}")
+    @GetMapping("/certificadoAdultos/{id}")
     public ResponseEntity<byte[]> getCertificado(@PathVariable Long id) throws IOException, InvalidFormatException {
-        Indigenas indigenas = indigenasService.findOne(id);
+        Adultos adultos = adultosService.findOne(id);
 
-        String consecutivo = indigenas.getConsecutivo();
-        String concatenar = indigenas.getPrimerApellido() + " " + indigenas.getSegundoApellido() + " " + indigenas.getPrimerNombre() + " " + indigenas.getSegundoNombre();
+        String consecutivo = adultos.getConsecutivo();
+        String concatenar = adultos.getPrimerApellido() + " " + adultos.getSegundoApellido() + " " + adultos.getPrimerNombre() + " " + adultos.getSegundoNombre();
         String ultimosCuatroDigitos = "";
 
         if (consecutivo.length() >= 4) {
@@ -93,7 +96,7 @@ public class IndigenasController {
         titlecentrado.setBold(true);
         titlecentrado.setFontSize(13);
         titlecentrado.setText("CERTIFICADO DE ASIGNACIÓN DE CÓDIGO DE IDENTIFICACIÓN\n" +
-                "HABITANTE DE CALLE");
+                "ADULTOS");
 
         XWPFParagraph subtitile = document.createParagraph();
         subtitile.setAlignment(ParagraphAlignment.CENTER);
@@ -112,9 +115,9 @@ public class IndigenasController {
         paragraphJustificado.setAlignment(ParagraphAlignment.BOTH);
         XWPFRun runJustificado = paragraphJustificado.createRun();
 
-        runJustificado.setText("Que, La, " + indigenas.getEntidades().getDescripcion() + " a través de la funcionario (a) " + indigenas.getNombreFuncionario() + ", solicito la asignación de\n" +
-                "código de identificación del usuario " + concatenar +  " , de fecha de nacimiento " + indigenas.getFechaNacimiento() +" y\n" +
-                "perteneciente al grupo de población HABITANTE DE CALLE a fecha de radicación " + indigenas.getFechaRegistro() + " Que, la ENTIDAD TERRITORIAL , consolidará y reportará la\n" +
+        runJustificado.setText("Que, La, " + adultos.getEntidades().getDescripcion() + " a través de la funcionario (a) " + adultos.getNombreFuncionario() + ", solicito la asignación de\n" +
+                "código de identificación del usuario " + concatenar +  " , de fecha de nacimiento " + adultos.getFechaNacimiento() +" y\n" +
+                "perteneciente al grupo de población HABITANTE DE CALLE a fecha de radicación " + adultos.getFechaRegistro() + " Que, la ENTIDAD TERRITORIAL , consolidará y reportará la\n" +
                 "Plataforma de Intercambio de Información PISIS del Sistema Integral de Información de la Protección Social-SISPRO.");
 
         XWPFParagraph paragraphIzquierda = document.createParagraph();
@@ -142,21 +145,21 @@ public class IndigenasController {
         item2.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun2 = paragraphIzquierda.createRun();
 
-        itemrun2.setText("FECHA DE NACIMIENTO: " + indigenas.getFechaNacimiento());
+        itemrun2.setText("FECHA DE NACIMIENTO: " + adultos.getFechaNacimiento());
         itemrun2.addCarriageReturn();
 
         XWPFParagraph item3 = document.createParagraph();
         item3.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun3 = paragraphIzquierda.createRun();
 
-        itemrun3.setText("TIPO DE DOCUMENTO: " + indigenas.getTipoDocumento());
+        itemrun3.setText("TIPO DE DOCUMENTO: " + adultos.getTipoDocumento());
         itemrun3.addCarriageReturn();
 
         XWPFParagraph item4 = document.createParagraph();
         item4.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun4 = paragraphIzquierda.createRun();
 
-        itemrun4.setText("NUMERO DE DOCUMENTO: " + indigenas.getConsecutivo());
+        itemrun4.setText("NUMERO DE DOCUMENTO: " + adultos.getConsecutivo());
         itemrun4.addCarriageReturn();
 
         XWPFParagraph item5 = document.createParagraph();
@@ -177,23 +180,15 @@ public class IndigenasController {
         item7.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun7 = paragraphIzquierda.createRun();
 
-        itemrun7.setText("EAPB: " + indigenas.getEps().getDescripcion());
+        itemrun7.setText("EAPB: " + adultos.getEps().getDescripcion());
         itemrun7.addCarriageReturn();
 
         XWPFParagraph item7_1 = document.createParagraph();
         item7_1.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun7_1 = paragraphIzquierda.createRun();
 
-        itemrun7_1.setText("Dirección: " + indigenas.getDireccion());
+        itemrun7_1.setText("Centro de protección: " + adultos.getCentroProteccion());
         itemrun7_1.addCarriageReturn();
-
-        XWPFParagraph item7_2 = document.createParagraph();
-        item7_2.setAlignment(ParagraphAlignment.LEFT);
-        XWPFRun itemrun7_2 = paragraphIzquierda.createRun();
-
-        itemrun7_2.setText("Nombre de resguardo: " + indigenas.getNombreResguardo());
-        itemrun7_2.addCarriageReturn();
-
 
         XWPFParagraph espacio2 = document.createParagraph();
         espacio2.setAlignment(ParagraphAlignment.BOTH);
@@ -296,67 +291,62 @@ public class IndigenasController {
                 .body(outputStream.toByteArray());
     }
 
-    @GetMapping("/buscarIndigenas")
-    public String buscarIndigenas(@RequestParam(name = "input", required = false) String input, Model modelo) {
-        List<Indigenas> indigenas;
+    @GetMapping("/buscarAdultos")
+    public String buscarAdultos(@RequestParam(name = "input", required = false) String input, Model modelo) {
+        List<Adultos> adultos;
         if (input != null && !input.isEmpty()) {
-            indigenas = indigenasService.findByAtributos(input);
+            adultos = adultosService.findByAtributos(input);
         } else {
-            indigenas = indigenasService.findAll();
+            adultos = adultosService.findAll();
         }
         modelo.addAttribute("titulo", "Resultado de la Búsqueda");
-        modelo.addAttribute("indigenas", indigenas);
-        return "listarIndigenas";
+        modelo.addAttribute("adultos", adultos);
+        return "listarAdultos";
     }
 
-    @GetMapping("/formIndigenas")
-    public String mostrarFormularioDeRegistrarIndigenas(Map<String,Object> modelo, Model model) {
-        Indigenas indigenas = new Indigenas();
+    @GetMapping("/formAdultos")
+    public String mostrarFormularioDeRegistrarAdultos(Map<String,Object> modelo, Model model) {
+        Adultos adultos = new Adultos();
         List<Eps> listaEps = epsService.findAll();
         List<Entidades> listaEntidades = entidadesService.findAll();
         model.addAttribute("listaEps", listaEps);
         model.addAttribute("listaEntidades", listaEntidades);
-        modelo.put("indigenas", indigenas);
-        modelo.put("titulo", "Registro de Indigenas");
-        return "formIndigenas";
+        modelo.put("adultos", adultos);
+        modelo.put("titulo", "Registro de Adultos");
+        return "formAdultos";
     }
 
-    @PostMapping("/formIndigenas")
-    public String guardarIndigenas(@Valid Indigenas indigenas, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
-        if (indigenas.getId() == null) {
-            String nuevoConsecutivo = indigenasService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
-            indigenas.setConsecutivo(nuevoConsecutivo);
+    @PostMapping("/formAdultos")
+    public String guardarIAdultos(@Valid Adultos adultos, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+        if (adultos.getId() == null) {
+            String nuevoConsecutivo = adultosService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
+            adultos.setConsecutivo(nuevoConsecutivo);
         }
-        int edad = calcularEdad(indigenas.getFechaNacimiento());
-        if (edad >= 18) {
-            indigenas.setTipoDocumento("AS");
-        } else {
-            indigenas.setTipoDocumento("MS");
-        }
-        String mensaje = (indigenas.getId() != null) ? "El Indigenas ha sido editado con éxito" : "Indigenas de calle registrado con éxito";
-        indigenasService.save(indigenas);
+        adultos.setTipoDocumento("AS");
+        String mensaje = (adultos.getId() != null) ? "El Adulto ha sido editado con éxito" : "Adulto de calle registrado con éxito";
+        adultosService.save(adultos);
         status.setComplete();
         flash.addFlashAttribute("success", mensaje);
-        return "redirect:/listarIndigenas";
+        return "redirect:/listarAdultos";
     }
 
 
-    @GetMapping("/editIndigenas/{id}")
-    public String editarIndigenas(@PathVariable(value = "id") Long id, Map<String, Object> modelo, RedirectAttributes flash,Model model) {
-        Indigenas indigenas = indigenasService.findOne(id);
+    @GetMapping("/editAdultos/{id}")
+    public String editarAdultos(@PathVariable(value = "id") Long id, Map<String, Object> modelo, RedirectAttributes flash,Model model) {
+        Adultos adultos = adultosService.findOne(id);
         List<Eps> listaEps = epsService.findAll();
         List<Entidades> listaEntidades = entidadesService.findAll();
-        if (indigenasService != null) {
+        if (adultosService != null) {
             model.addAttribute("listaEps", listaEps);
             model.addAttribute("listaEntidades", listaEntidades);
-            modelo.put("indigenas", indigenas);
-            modelo.put("titulo", "Actualización de Indigenas");
+            modelo.put("adultos", adultos);
+            modelo.put("titulo", "Actualización de Adultos");
         } else {
-            flash.addFlashAttribute("error", "El ID del Indigena no existe en la base de datos");
-            return "redirect:/listarIndigenas";
+            flash.addFlashAttribute("error", "El ID del Adulto no existe en la base de datos");
+            return "redirect:/listarAdultos";
         }
 
-        return "formIndigenas";
+        return "formAdultos";
     }
 
     private int calcularEdad(Date fechaNacimiento) {
@@ -370,32 +360,32 @@ public class IndigenasController {
         return edad;
     }
 
-    @GetMapping({"/", "/listarIndigenas"})
-    public String listarIndigenas(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
+    @GetMapping({"/", "/listarAdultos"})
+    public String listarAdultos(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
         Pageable pageRequest = PageRequest.of(page, 4);
-        Page<Indigenas> indigenas = indigenasService.findAll(pageRequest);
-        PageRender<Indigenas> pageRender = new PageRender<>("/listarIndigenas", indigenas);
+        Page<Adultos> adultos = adultosService.findAll(pageRequest);
+        PageRender<Adultos> pageRender = new PageRender<>("/listarAdultos", adultos);
         Date fechaActual = new Date();
-        for (Indigenas ind : indigenas) {
-            Date fechaRegistro = ind.getFechaRegistro();
+        for (Adultos adu : adultos) {
+            Date fechaRegistro = adu.getFechaRegistro();
             Calendar calendarRegistro = Calendar.getInstance();
             calendarRegistro.setTime(fechaRegistro);
             calendarRegistro.add(Calendar.MONTH, 4);
             if (fechaActual.after(calendarRegistro.getTime())) {
-                ind.setAlerta(true);
+                adu.setAlerta(true);
             } else {
-                ind.setAlerta(false);
+                adu.setAlerta(false);
             }
         }
-        modelo.addAttribute("titulo", "Agregar Indigena");
-        modelo.addAttribute("indigenas", indigenas);
+        modelo.addAttribute("titulo", "Agregar Adultos");
+        modelo.addAttribute("adultos", adultos);
         modelo.addAttribute("page", pageRender);
-        boolean mostrarAlerta = indigenas.stream().anyMatch(Indigenas::isAlerta);
+        boolean mostrarAlerta = adultos.stream().anyMatch(Adultos::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
-        return "listarIndigenas";
+        return "listarAdultos";
     }
 
-    @GetMapping("/exportarIndigenasExcel")
+    @GetMapping("/exportarAdultosExcel")
     public void exportarListadoDeIndigenasEnExcel(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
@@ -403,13 +393,13 @@ public class IndigenasController {
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Indigenas_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=Adultos_" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
-        List<Indigenas> indigenas = indigenasService.findAll();
+        List<Adultos> adultos = adultosService.findAll();
 
-        IndigenasExporterExcel exporter = new IndigenasExporterExcel(indigenas);
+        AdultosExporterExcel exporter = new AdultosExporterExcel(adultos);
         exporter.exportar(response);
     }
 }

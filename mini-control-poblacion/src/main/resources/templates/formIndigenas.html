@@ -66,6 +66,14 @@
                 <option th:each="entidades : ${listaEntidades}" th:value="${entidades.id}" th:text="${entidades.descripcion}"></option>
               </select>
             </div>
+            <div class="form-group">
+              <label>Nombre Resguardo : </label>
+              <input type="text" th:field="*{nombreResguardo}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+            </div>
+            <div class="form-group">
+              <label>Direccion : </label>
+              <input type="text" th:field="*{direccion}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+            </div>
             <div th:if="${indigenas.id != null}">
               <div class="form-group">
                 <label>Tipo documento actual : </label>

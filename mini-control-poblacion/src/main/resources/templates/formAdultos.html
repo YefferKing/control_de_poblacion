@@ -14,10 +14,10 @@
     <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
       <h1 class="text-center" th:text="${titulo}"></h1>
       <div class="card-body">
-        <form th:action="@{/formIndigenas}" th:object="${indigenas}" method="post">
-          <input type="hidden" th:field="*{id}" th:value="${indigenas.id}"/>
+        <form th:action="@{/formAdultos}" th:object="${adultos}" method="post">
+          <input type="hidden" th:field="*{id}" th:value="${adultos.id}"/>
           <div class="form-group">
-            <input type="hidden" name="consecutivo" th:field="*{consecutivo}" th:value="${indigenas.consecutivo}" />
+            <input type="hidden" name="consecutivo" th:field="*{consecutivo}" th:value="${adultos.consecutivo}" />
           </div>
           <div class="form-group">
             <label>Fecha Registro : </label>
@@ -67,14 +67,10 @@
               </select>
             </div>
             <div class="form-group">
-              <label>Nombre Resguardo : </label>
-              <input type="text" th:field="*{nombreResguardo}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+              <label>Centro Proteccion : </label>
+              <input type="text" th:field="*{centroProteccion}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
             </div>
-            <div class="form-group">
-              <label>Direccion : </label>
-              <input type="text" th:field="*{direccion}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
-            </div>
-            <div th:if="${indigenas.id != null}">
+            <div th:if="${adultos.id != null}">
               <div class="form-group">
                 <label>Tipo documento actual : </label>
                 <select class="form-control" th:field="*{tipoDocumentoActual}">

@@ -60,6 +60,10 @@ public class Indigenas {
 
     private String nombreFuncionario;
 
+    private String nombreResguardo;
+
+    private String direccion;
+
     public Indigenas() { super(); }
 
     public Long getId() {
@@ -168,5 +172,21 @@ public class Indigenas {
 
     public void setNombreFuncionario(String nombreFuncionario) {
         this.nombreFuncionario = nombreFuncionario;
+    }
+
+    public String getNombreResguardo() {
+        return nombreResguardo;
+    }
+
+    public void setNombreResguardo(String nombreResguardo) {
+        this.nombreResguardo = nombreResguardo;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

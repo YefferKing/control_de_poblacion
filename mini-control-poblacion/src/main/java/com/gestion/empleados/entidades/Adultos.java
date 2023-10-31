@@ -19,14 +19,15 @@ public class Adultos {
     @NotEmpty
     private String primerNombre;
 
-    @Null
     private String segundoNombre;
 
     @NotEmpty
     private String primerApellido;
 
-    @Null
+    @NotEmpty
     private String segundoApellido;
+
+    private String consecutivo;
 
     @NotNull
     @Temporal(TemporalType.DATE)
@@ -36,12 +37,33 @@ public class Adultos {
     @NotEmpty
     private String sexo;
 
-    @NotNull
-    private String consecutivo;
+    @NotEmpty
+    private String tipoDocumento;
 
-    public Adultos() {
-        super();
-    }
+    private String tipoDocumentoActual;
+
+    private String numeroDocumentoActual;
+
+    private boolean alerta;
+
+    @JoinColumn(name = "eps_id")
+    @ManyToOne
+    private Eps eps;
+
+    @JoinColumn(name = "entidad_id")
+    @ManyToOne
+    private Entidades entidades;
+
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaRegistro;
+
+    private String nombreFuncionario;
+
+    private String centroProteccion;
+
+    public Adultos() { super(); }
 
     public Long getId() {
         return id;
@@ -99,11 +121,63 @@ public class Adultos {
         this.sexo = sexo;
     }
 
-    public String getConsecutivo() {
-        return consecutivo;
+    public String getConsecutivo() {return consecutivo;}
+
+    public void setConsecutivo(String consecutivo) {this.consecutivo = consecutivo;}
+
+    public String getTipoDocumento() {return tipoDocumento;}
+
+    public void setTipoDocumento(String tipoDocumento) {this.tipoDocumento = tipoDocumento;}
+
+    public String getTipoDocumentoActual() {return tipoDocumentoActual;}
+
+    public void setTipoDocumentoActual(String tipoDocumentoActual) {this.tipoDocumentoActual = tipoDocumentoActual;}
+
+    public String getNumeroDocumentoActual() {return numeroDocumentoActual;}
+
+    public void setNumeroDocumentoActual(String numeroDocumentoActual) {this.numeroDocumentoActual = numeroDocumentoActual;}
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
     }
 
-    public void setConsecutivo(String consecutivo) {
-        this.consecutivo = consecutivo;
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public boolean isAlerta() {return alerta;}
+
+    public void setAlerta(boolean alerta) {this.alerta = alerta;}
+
+    public Eps getEps() {
+        return eps;
+    }
+
+    public void setEps(Eps eps) {
+        this.eps = eps;
+    }
+
+    public Entidades getEntidades() {
+        return entidades;
+    }
+
+    public void setEntidades(Entidades entidades) {
+        this.entidades = entidades;
+    }
+
+    public String getNombreFuncionario() {
+        return nombreFuncionario;
+    }
+
+    public void setNombreFuncionario(String nombreFuncionario) {
+        this.nombreFuncionario = nombreFuncionario;
+    }
+
+    public String getCentroProteccion() {
+        return centroProteccion;
+    }
+
+    public void setCentroProteccion(String centroProteccion) {
+        this.centroProteccion = centroProteccion;
     }
 }
