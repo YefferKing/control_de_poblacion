@@ -93,7 +93,7 @@ public class IndigenasController {
         titlecentrado.setBold(true);
         titlecentrado.setFontSize(13);
         titlecentrado.setText("CERTIFICADO DE ASIGNACIÓN DE CÓDIGO DE IDENTIFICACIÓN\n" +
-                "HABITANTE DE CALLE");
+                "INDIGENAS");
 
         XWPFParagraph subtitile = document.createParagraph();
         subtitile.setAlignment(ParagraphAlignment.CENTER);
@@ -114,7 +114,7 @@ public class IndigenasController {
 
         runJustificado.setText("Que, La, " + indigenas.getEntidades().getDescripcion() + " a través de la funcionario (a) " + indigenas.getNombreFuncionario() + ", solicito la asignación de\n" +
                 "código de identificación del usuario " + concatenar +  " , de fecha de nacimiento " + indigenas.getFechaNacimiento() +" y\n" +
-                "perteneciente al grupo de población HABITANTE DE CALLE a fecha de radicación " + indigenas.getFechaRegistro() + " Que, la ENTIDAD TERRITORIAL , consolidará y reportará la\n" +
+                "perteneciente al grupo de población INDIGENAS a fecha de radicación " + indigenas.getFechaRegistro() + " Que, la ENTIDAD TERRITORIAL , consolidará y reportará la\n" +
                 "Plataforma de Intercambio de Información PISIS del Sistema Integral de Información de la Protección Social-SISPRO.");
 
         XWPFParagraph paragraphIzquierda = document.createParagraph();
@@ -163,7 +163,7 @@ public class IndigenasController {
         item5.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun5 = paragraphIzquierda.createRun();
 
-        itemrun5.setText("NOMBRE DE POBLACION: " + "HABITANTE DE CALLE");
+        itemrun5.setText("NOMBRE DE POBLACION: " + "INDIGENA");
         itemrun5.addCarriageReturn();
 
         XWPFParagraph item6 = document.createParagraph();

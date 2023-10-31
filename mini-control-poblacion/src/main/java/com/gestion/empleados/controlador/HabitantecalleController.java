@@ -170,7 +170,7 @@ public class HabitantecalleController {
         item6.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun6 = paragraphIzquierda.createRun();
 
-        itemrun6.setText("TIPO DE POBLACION: " + "17");
+        itemrun6.setText("TIPO DE POBLACION: " + "1");
         itemrun6.addCarriageReturn();
 
         XWPFParagraph item7 = document.createParagraph();

@@ -117,7 +117,7 @@ public class AdultosController {
 
         runJustificado.setText("Que, La, " + adultos.getEntidades().getDescripcion() + " a través de la funcionario (a) " + adultos.getNombreFuncionario() + ", solicito la asignación de\n" +
                 "código de identificación del usuario " + concatenar +  " , de fecha de nacimiento " + adultos.getFechaNacimiento() +" y\n" +
-                "perteneciente al grupo de población HABITANTE DE CALLE a fecha de radicación " + adultos.getFechaRegistro() + " Que, la ENTIDAD TERRITORIAL , consolidará y reportará la\n" +
+                "perteneciente al grupo de población ADULTOS a fecha de radicación " + adultos.getFechaRegistro() + " Que, la ENTIDAD TERRITORIAL , consolidará y reportará la\n" +
                 "Plataforma de Intercambio de Información PISIS del Sistema Integral de Información de la Protección Social-SISPRO.");
 
         XWPFParagraph paragraphIzquierda = document.createParagraph();
@@ -166,14 +166,14 @@ public class AdultosController {
         item5.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun5 = paragraphIzquierda.createRun();
 
-        itemrun5.setText("NOMBRE DE POBLACION: " + "HABITANTE DE CALLE");
+        itemrun5.setText("NOMBRE DE POBLACION: " + "ADULTOS");
         itemrun5.addCarriageReturn();
 
         XWPFParagraph item6 = document.createParagraph();
         item6.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun6 = paragraphIzquierda.createRun();
 
-        itemrun6.setText("TIPO DE POBLACION: " + "17");
+        itemrun6.setText("TIPO DE POBLACION: " + "16");
         itemrun6.addCarriageReturn();
 
         XWPFParagraph item7 = document.createParagraph();
