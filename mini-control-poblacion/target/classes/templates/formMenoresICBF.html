@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+    <meta charset="utf-8">
+</head>
+<body>
+
+<header th:replace="layout/layout :: header"></header>
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class="text-center" th:text="${titulo}"></h1>
+            <div class="card-body">
+                <form th:action="@{/formMenoresICBF}" th:object="${menoresICBF}" method="post">
+                    <input type="hidden" th:field="*{id}" th:value="${menoresICBF.id}"/>
+                    <div class="form-group">
+                        <input type="hidden" name="consecutivo" th:field="*{consecutivo}" th:value="${menoresICBF.consecutivo}" />
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha Registro : </label>
+                        <input type="date" th:field="*{fechaRegistro}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre Funcionario : </label>
+                        <input type="text" th:field="*{nombreFuncionario}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Primer Apellido : </label>
+                        <input type="text" th:field="*{primerApellido}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Segundo Apellido : </label>
+                        <input type="text" th:field="*{segundoApellido}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Primer Nombre : </label>
+                        <input type="text" th:field="*{primerNombre}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Segundo Nombre : </label>
+                        <input type="text" th:field="*{segundoNombre}" class="form-control"/>
+                        <div class="form-group">
+                            <label>Fecha Nacimiento : </label>
+                            <input type="date" th:field="*{fechaNacimiento}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo : </label>
+                            <select class="form-control" th:field="*{sexo}" required>
+                                <option th:value='M'>Masculino</option>
+                                <option th:value='F'>Femenino</option>
+                                <option th:value='Otro'>Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Eps : </label>
+                            <select class="form-control" th:field="*{eps.id}" required>
+                                <option th:each="eps : ${listaEps}" th:value="${eps.id}" th:text="${eps.descripcion}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Entidad : </label>
+                            <select class="form-control" th:field="*{entidades.id}" required>
+                                <option th:each="entidades : ${listaEntidades}" th:value="${entidades.id}" th:text="${entidades.descripcion}"></option>
+                            </select>
+                        </div>
+                        <div th:if="${menoresICBF.id != null}">
+                            <div class="form-group">
+                                <label>Tipo documento actual : </label>
+                                <select class="form-control" th:field="*{tipoDocumentoActual}">
+                                    <option th:value='CC'>CC</option>
+                                    <option th:value='TI'>TI</option>
+                                    <option th:value='RC'>RC</option>
+                                    <option th:value='PT'>PT</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Numero documento actual : </label>
+                                <input type="text" th:field="*{numeroDocumentoActual}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" value="Guardar" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
