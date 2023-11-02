@@ -9,8 +9,8 @@ import javax.validation.constraints.Null;
 import java.util.Date;
 
 @Entity
-@Table(name = "menores_ICBF")
-public class MenoresICBF {
+@Table(name = "poblacion_privilegiada")
+public class PoblacionPrivada {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +31,10 @@ public class MenoresICBF {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
 
+    @NotEmpty
     private String sexo;
 
+    @NotEmpty
     private String tipoDocumento;
 
     private String tipoDocumentoActual;
@@ -56,7 +58,8 @@ public class MenoresICBF {
 
     private String nombreFuncionario;
 
-    public MenoresICBF() { super(); }
+
+    public PoblacionPrivada() { super(); }
 
     public Long getId() {
         return id;

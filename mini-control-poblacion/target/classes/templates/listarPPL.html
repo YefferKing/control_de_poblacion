@@ -21,10 +21,10 @@
         </div>
       </div>
       <h4 class="card-title">
-        <a th:href="@{/formMenoresICBF}" class="btn btn-primary">+</a>
-        <a th:href="@{/exportarMenoresICBFExcel}" class="btn btn-primary">Excel</a>
+        <a th:href="@{/formPPL}" class="btn btn-primary">+</a>
+        <a th:href="@{/exportarPPLExcel}" class="btn btn-primary">Excel</a>
       </h4>
-      <form th:action="@{/buscarMenoresICBF}" method="get">
+      <form th:action="@{/buscarPPL}" method="get">
         <div class="form-row align-items-center">
           <div class="col-auto">
             <label class="sr-only">Filtrar:</label>
@@ -37,6 +37,7 @@
           </div>
         </div>
       </form>
+     <div class="table-container" style="max-height: 400px; overflow-y: auto;">
       <table class="table table-striped">
         <thead>
         <tr>
@@ -56,30 +57,31 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="menoresICBF : ${menoresICBF}">
-          <td th:text="${menoresICBF.primerNombre}"></td>
-          <td th:text="${menoresICBF.segundoNombre}"></td>
-          <td th:text="${menoresICBF.primerApellido}"></td>
-          <td th:text="${menoresICBF.segundoApellido}"></td>
-          <td th:text="${menoresICBF.fechaNacimiento}"></td>
-          <td th:text="${menoresICBF.sexo}"></td>
-          <td th:text="${menoresICBF.consecutivo}"></td>
-          <td th:text="${menoresICBF.tipoDocumento}"></td>
-          <td th:text="${menoresICBF.tipoDocumentoActual}"></td>
-          <td th:text="${menoresICBF.numeroDocumentoActual}"></td>
+        <tr th:each="poblacionPrivada : ${poblacionPrivada}">
+          <td th:text="${poblacionPrivada.primerNombre}"></td>
+          <td th:text="${poblacionPrivada.segundoNombre}"></td>
+          <td th:text="${poblacionPrivada.primerApellido}"></td>
+          <td th:text="${poblacionPrivada.segundoApellido}"></td>
+          <td th:text="${poblacionPrivada.fechaNacimiento}"></td>
+          <td th:text="${poblacionPrivada.sexo}"></td>
+          <td th:text="${poblacionPrivada.consecutivo}"></td>
+          <td th:text="${poblacionPrivada.tipoDocumento}"></td>
+          <td th:text="${poblacionPrivada.tipoDocumentoActual}"></td>
+          <td th:text="${poblacionPrivada.numeroDocumentoActual}"></td>
           <td>
-            <button type="button" th:style="${menoresICBF.alerta} ? 'background-color: red; color: white; width: 30px; height: 30px;' : 'background-color: green; color: white; width: 30px; height: 30px;'">
+            <button type="button" th:style="${poblacionPrivada.alerta} ? 'background-color: red; color: white; width: 30px; height: 30px;' : 'background-color: green; color: white; width: 30px; height: 30px;'">
             </button>
           </td>
           <td sec:authorize="hasRole('ADMIN')"><a
                   class="btn btn-warning btn-sm"
-                  th:href="@{/editMenoresICBF/} + ${menoresICBF.id}">Editar</a></td>
+                  th:href="@{/editPPL/} + ${poblacionPrivada.id}">Editar</a></td>
           <td sec:authorize="hasRole('ADMIN')"><a
                   class="btn btn-danger btn-sm"
-                  th:href="@{/certificadoMenoresICBF/} + ${menoresICBF.id}">PDF</a></td>
+                  th:href="@{/certificadoPPL/} + ${poblacionPrivada.id}">PDF</a></td>
         </tr>
         </tbody>
       </table>
+     </div>
     </div>
   </div>
 </div>

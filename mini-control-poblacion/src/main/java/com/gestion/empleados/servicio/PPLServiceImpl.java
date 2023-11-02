@@ -1,69 +1,70 @@
 package com.gestion.empleados.servicio;
 
 import com.gestion.empleados.entidades.HabitanteCalle;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import com.gestion.empleados.repositorios.HabitantecalleRepository;
+import com.gestion.empleados.repositorios.PPLRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Sort;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class HabitantecalleServiceImpl implements HabitantecalleService {
+public class PPLServiceImpl implements PPLService {
 
     @Autowired
-    private HabitantecalleRepository habitantecalleRepository;
+    private PPLRepository pplRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<HabitanteCalle> findAll() {
-        return (List<HabitanteCalle>) habitantecalleRepository.findAll();
+    public List<PoblacionPrivada> findAll() {
+        return (List<PoblacionPrivada>) pplRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<HabitanteCalle> findAll(Pageable pageable) {
-        return habitantecalleRepository.findAll(pageable);
+    public Page<PoblacionPrivada> findAll(Pageable pageable) {
+        return pplRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
-    public void save(HabitanteCalle habitanteCalle) {
-        habitantecalleRepository.save(habitanteCalle);
+    public void save(PoblacionPrivada poblacionPrivada) {
+        pplRepository.save(poblacionPrivada);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        habitantecalleRepository.deleteById(id);
+        pplRepository.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public HabitanteCalle findOne(Long id) {
-        return habitantecalleRepository.findById(id).orElse(null);
+    public PoblacionPrivada findOne(Long id) {
+        return pplRepository.findById(id).orElse(null);
     }
 
     @Override
     public String obtenerUltimoConsecutivoDesdeBaseDeDatos() {
         // Utiliza el repositorio para obtener el último HabitanteCalle ordenado por consecutivo en orden descendente
-        Iterable<HabitanteCalle> habitantes = habitantecalleRepository.findAll(Sort.by(Sort.Direction.DESC, "consecutivo"));
+        Iterable<PoblacionPrivada> poblacionPrivada = pplRepository.findAll(Sort.by(Sort.Direction.DESC, "consecutivo"));
 
-        List<HabitanteCalle> habitantesList = new ArrayList<>();
-        habitantes.forEach(habitantesList::add);
+        List<PoblacionPrivada> pplList = new ArrayList<>();
+        poblacionPrivada.forEach(pplList::add);
 
-        if (!habitantesList.isEmpty()) {
-            HabitanteCalle ultimoHabitante = habitantesList.get(0);
-            String consecutivoActual = ultimoHabitante.getConsecutivo();
+        if (!pplList.isEmpty()) {
+            PoblacionPrivada ultimoPPL = pplList.get(0);
+            String consecutivoActual = ultimoPPL.getConsecutivo();
             int numero = Integer.parseInt(consecutivoActual.substring(consecutivoActual.length() - 4)); // Obtiene los últimos tres dígitos
 
             // Verifica si el habitante de calle es nuevo (ID es nulo)
-            if (ultimoHabitante.getId() != null) {
+            if (ultimoPPL.getId() != null) {
                 numero++; // Incrementa el número solo para nuevos registros
             }
 
@@ -71,19 +72,20 @@ public class HabitantecalleServiceImpl implements HabitantecalleService {
             String nuevoConsecutivo = consecutivoActual.substring(0, consecutivoActual.length() - 3) + nuevoNumero; // Construye el nuevo consecutivo
 
             // Actualiza el consecutivo en el último registro solo si es un nuevo registro
-            if (ultimoHabitante.getId() == null) {
-                ultimoHabitante.setConsecutivo(nuevoConsecutivo);
-                habitantecalleRepository.save(ultimoHabitante);
+            if (ultimoPPL.getId() == null) {
+                ultimoPPL.setConsecutivo(nuevoConsecutivo);
+                pplRepository.save(ultimoPPL);
             }
 
             return nuevoConsecutivo;
         } else {
             // Si no hay habitantes de calle registrados todavía, regresa un valor predeterminado
-            return "54001D0001"; // Ajusta este valor según tus necesidades
+            return "54001P0001"; // Ajusta este valor según tus necesidades
         }
     }
 
-    public List<HabitanteCalle> findByAtributos(String primerNombre) {
-        return habitantecalleRepository.findByAtributos(primerNombre);
+    public List<PoblacionPrivada> findByAtributos(String primerNombre) {
+        return pplRepository.findByAtributos(primerNombre);
     }
+
 }

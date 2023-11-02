@@ -16,15 +16,12 @@ public class Adultos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
     private String primerNombre;
 
     private String segundoNombre;
 
-    @NotEmpty
     private String primerApellido;
 
-    @NotEmpty
     private String segundoApellido;
 
     private String consecutivo;
@@ -34,10 +31,8 @@ public class Adultos {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fechaNacimiento;
 
-    @NotEmpty
     private String sexo;
 
-    @NotEmpty
     private String tipoDocumento;
 
     private String tipoDocumentoActual;

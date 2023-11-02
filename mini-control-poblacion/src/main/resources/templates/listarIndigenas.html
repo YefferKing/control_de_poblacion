@@ -40,7 +40,6 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          <th>ID</th>
           <th>Primer Nombre</th>
           <th>Segundo Nombre</th>
           <th>Primer Apellido</th>
@@ -58,7 +57,6 @@
         </thead>
         <tbody>
         <tr th:each="indigenas : ${indigenas}">
-          <td th:text="${indigenas.id}"></td>
           <td th:text="${indigenas.primerNombre}"></td>
           <td th:text="${indigenas.segundoNombre}"></td>
           <td th:text="${indigenas.primerApellido}"></td>

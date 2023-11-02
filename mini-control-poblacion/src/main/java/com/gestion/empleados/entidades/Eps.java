@@ -13,10 +13,8 @@ public class Eps {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
     private String codigo;
 
-    @NotEmpty
     private String descripcion;
 
     @OneToMany(mappedBy = "eps")
