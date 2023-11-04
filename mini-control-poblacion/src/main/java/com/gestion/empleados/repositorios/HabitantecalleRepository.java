@@ -2,6 +2,7 @@ package com.gestion.empleados.repositorios;
 
 import com.gestion.empleados.entidades.Empleado;
 import com.gestion.empleados.entidades.HabitanteCalle;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.*;
@@ -17,4 +18,7 @@ public interface HabitantecalleRepository extends PagingAndSortingRepository<Hab
             "h.primerApellido = :input OR " +
             "h.segundoApellido = :input)")
     List<HabitanteCalle> findByAtributos(String input);
+
+    HabitanteCalle findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento);
 }

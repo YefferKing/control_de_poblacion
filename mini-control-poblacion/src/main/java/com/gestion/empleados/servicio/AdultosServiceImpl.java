@@ -2,6 +2,7 @@ package com.gestion.empleados.servicio;
 
 import com.gestion.empleados.entidades.Adultos;
 import com.gestion.empleados.entidades.Indigenas;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import com.gestion.empleados.repositorios.AdultosRepository;
 import com.gestion.empleados.repositorios.IndigenasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -86,5 +88,12 @@ public class AdultosServiceImpl implements AdultosService {
 
     public List<Adultos> findByAtributos(String primerNombre) {
         return adultosRepository.findByAtributos(primerNombre);
+    }
+
+    @Override
+    public Adultos findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento) {
+        return adultosRepository.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento);
     }
 }

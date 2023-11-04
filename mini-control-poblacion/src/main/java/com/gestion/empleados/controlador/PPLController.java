@@ -173,7 +173,7 @@ public class PPLController {
         item6.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun6 = paragraphIzquierda.createRun();
 
-        itemrun6.setText("TIPO DE POBLACION: " + "1");
+        itemrun6.setText("TIPO DE POBLACION: " + "14");
         itemrun6.addCarriageReturn();
 
         XWPFParagraph item7 = document.createParagraph();
@@ -311,20 +311,23 @@ public class PPLController {
 
     @PostMapping("/formPPL")
     public String guardarPPL(@Valid PoblacionPrivada poblacionPrivada, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
-        // Verifica si el habitanteCalle es nuevo (no tiene ID asignado)
         if (poblacionPrivada.getId() == null) {
+            PoblacionPrivada existingPPL = pplService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                    poblacionPrivada.getPrimerNombre(),
+                    poblacionPrivada.getSegundoNombre(),
+                    poblacionPrivada.getPrimerApellido(),
+                    poblacionPrivada.getSegundoApellido(),
+                    poblacionPrivada.getFechaNacimiento()
+            );
+            if (existingPPL != null) {
+                flash.addFlashAttribute("error_message", "Registro ya existe en la base de datos");
+                return "redirect:/formPPL?error=true";
+            }
             String nuevoConsecutivo = pplService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             poblacionPrivada.setConsecutivo(nuevoConsecutivo);
         }
-
-        int edad = calcularEdad(poblacionPrivada.getFechaNacimiento());
-        if (edad >= 18) {
-            poblacionPrivada.setTipoDocumento("AS");
-        } else {
-            poblacionPrivada.setTipoDocumento("MS");
-        }
-
-        String mensaje = (poblacionPrivada.getId() != null) ? "Privado de Libertad ha sido editado con éxito" : "Privado de Libertad de calle registrado con éxito";
+        poblacionPrivada.setTipoDocumento("AS");
+        String mensaje = (poblacionPrivada.getId() != null) ? "Privado de Libertad ha sido editado con éxito" : "Privado de Libertad registrado con éxito";
         pplService.save(poblacionPrivada);
         status.setComplete();
         flash.addFlashAttribute("success", mensaje);
@@ -363,10 +366,9 @@ public class PPLController {
     }
 
     @GetMapping({"/", "/listarPPL"})
-    public String listarPPL(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
-        Pageable pageRequest = PageRequest.of(page, 4);
-        Page<PoblacionPrivada> poblacionPrivada = pplService.findAll(pageRequest);
-        PageRender<PoblacionPrivada> pageRender = new PageRender<>("/listarPPL", poblacionPrivada);
+    public String listarPPL(Model modelo) {
+        List<PoblacionPrivada> poblacionPrivada = pplService.findAll();
+
         Date fechaActual = new Date();
         for (PoblacionPrivada ppl : poblacionPrivada) {
             Date fechaRegistro = ppl.getFechaRegistro();
@@ -381,7 +383,7 @@ public class PPLController {
         }
         modelo.addAttribute("titulo", "Agregar Poblacion Privada de la Libertad");
         modelo.addAttribute("poblacionPrivada", poblacionPrivada);
-        modelo.addAttribute("page", pageRender);
+        modelo.addAttribute("page", null);
         boolean mostrarAlerta = poblacionPrivada.stream().anyMatch(PoblacionPrivada::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarPPL";

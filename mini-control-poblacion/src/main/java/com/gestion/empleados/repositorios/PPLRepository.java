@@ -5,6 +5,7 @@ import com.gestion.empleados.entidades.PoblacionPrivada;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PPLRepository extends PagingAndSortingRepository<PoblacionPrivada, Long> {
@@ -18,4 +19,7 @@ public interface PPLRepository extends PagingAndSortingRepository<PoblacionPriva
             "h.primerApellido = :input OR " +
             "h.segundoApellido = :input)")
     List<PoblacionPrivada> findByAtributos(String input);
+
+    PoblacionPrivada findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento);
 }

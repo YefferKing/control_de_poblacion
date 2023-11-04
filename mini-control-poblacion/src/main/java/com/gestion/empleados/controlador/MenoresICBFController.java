@@ -1,9 +1,6 @@
 package com.gestion.empleados.controlador;
 
-import com.gestion.empleados.entidades.Adultos;
-import com.gestion.empleados.entidades.Entidades;
-import com.gestion.empleados.entidades.Eps;
-import com.gestion.empleados.entidades.MenoresICBF;
+import com.gestion.empleados.entidades.*;
 import com.gestion.empleados.servicio.AdultosService;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
@@ -310,13 +307,24 @@ public class MenoresICBFController {
     }
 
     @PostMapping("/formMenoresICBF")
-    public String guardarMenoresICBF(@Valid MenoresICBF menoresICBF, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+    public String guardaMenoresICBF(@Valid MenoresICBF menoresICBF, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
         if (menoresICBF.getId() == null) {
+            MenoresICBF existingPPL = menoresICBFService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                    menoresICBF.getPrimerNombre(),
+                    menoresICBF.getSegundoNombre(),
+                    menoresICBF.getPrimerApellido(),
+                    menoresICBF.getSegundoApellido(),
+                    menoresICBF.getFechaNacimiento()
+            );
+            if (existingPPL != null) {
+                flash.addFlashAttribute("error_message", "Registro ya existe en la base de datos");
+                return "redirect:/formMenoresICBF?error=true";
+            }
             String nuevoConsecutivo = menoresICBFService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             menoresICBF.setConsecutivo(nuevoConsecutivo);
         }
         menoresICBF.setTipoDocumento("MS");
-        String mensaje = (menoresICBF.getId() != null) ? "El Menor ha sido editado con éxito" : "Menor de calle registrado con éxito";
+        String mensaje = (menoresICBF.getId() != null) ? "Menor ICBF ha sido editado con éxito" : "Menor ICBF registrado con éxito";
         menoresICBFService.save(menoresICBF);
         status.setComplete();
         flash.addFlashAttribute("success", mensaje);
@@ -354,10 +362,8 @@ public class MenoresICBFController {
     }
 
     @GetMapping({"/", "/listarMenoresICBF"})
-    public String listarMenoresICBF(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
-        Pageable pageRequest = PageRequest.of(page, 4);
-        Page<MenoresICBF> menoresICBF = menoresICBFService.findAll(pageRequest);
-        PageRender<MenoresICBF> pageRender = new PageRender<>("/listarMenoresICBF", menoresICBF);
+    public String listarMenoresICBF(Model modelo) {
+        List<MenoresICBF> menoresICBF = menoresICBFService.findAll();
         Date fechaActual = new Date();
         for (MenoresICBF menor : menoresICBF) {
             Date fechaRegistro = menor.getFechaRegistro();
@@ -372,7 +378,7 @@ public class MenoresICBFController {
         }
         modelo.addAttribute("titulo", "Agregar Menor ICBF");
         modelo.addAttribute("menoresICBF", menoresICBF);
-        modelo.addAttribute("page", pageRender);
+        modelo.addAttribute("page", null);
         boolean mostrarAlerta = menoresICBF.stream().anyMatch(MenoresICBF::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarMenoresICBF";

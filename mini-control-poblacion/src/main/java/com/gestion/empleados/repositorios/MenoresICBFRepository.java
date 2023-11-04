@@ -2,9 +2,11 @@ package com.gestion.empleados.repositorios;
 
 import com.gestion.empleados.entidades.HabitanteCalle;
 import com.gestion.empleados.entidades.MenoresICBF;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MenoresICBFRepository extends PagingAndSortingRepository<MenoresICBF, Long> {
@@ -18,4 +20,7 @@ public interface MenoresICBFRepository extends PagingAndSortingRepository<Menore
             "h.primerApellido = :input OR " +
             "h.segundoApellido = :input)")
     List<MenoresICBF> findByAtributos(String input);
+
+    MenoresICBF findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento);
 }

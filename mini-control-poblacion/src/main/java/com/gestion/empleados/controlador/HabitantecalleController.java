@@ -4,6 +4,7 @@ package com.gestion.empleados.controlador;
 import com.gestion.empleados.entidades.Entidades;
 import com.gestion.empleados.entidades.Eps;
 import com.gestion.empleados.entidades.HabitanteCalle;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
 import com.gestion.empleados.servicio.HabitantecalleService;
@@ -308,20 +309,28 @@ public class HabitantecalleController {
 
     @PostMapping("/formHabitanteCalle")
     public String guardarHabitanteCalle(@Valid HabitanteCalle habitanteCalle, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
-        // Verifica si el habitanteCalle es nuevo (no tiene ID asignado)
         if (habitanteCalle.getId() == null) {
+            HabitanteCalle existingPPL = habitantecalleService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                    habitanteCalle.getPrimerNombre(),
+                    habitanteCalle.getSegundoNombre(),
+                    habitanteCalle.getPrimerApellido(),
+                    habitanteCalle.getSegundoApellido(),
+                    habitanteCalle.getFechaNacimiento()
+            );
+            if (existingPPL != null) {
+                flash.addFlashAttribute("error_message", "Registro ya existe en la base de datos");
+                return "redirect:/formHabitanteCalle?error=true";
+            }
             String nuevoConsecutivo = habitantecalleService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             habitanteCalle.setConsecutivo(nuevoConsecutivo);
         }
-
         int edad = calcularEdad(habitanteCalle.getFechaNacimiento());
         if (edad >= 18) {
             habitanteCalle.setTipoDocumento("AS");
         } else {
             habitanteCalle.setTipoDocumento("MS");
         }
-
-        String mensaje = (habitanteCalle.getId() != null) ? "El Habitante de calle ha sido editado con éxito" : "Habitante de calle registrado con éxito";
+        String mensaje = (habitanteCalle.getId() != null) ? "Habitante Calle ha sido editado con éxito" : "Habitante Calle registrado con éxito";
         habitantecalleService.save(habitanteCalle);
         status.setComplete();
         flash.addFlashAttribute("success", mensaje);
@@ -360,10 +369,8 @@ public class HabitantecalleController {
     }
 
     @GetMapping({"/", "/listarHabitanteCalle"})
-    public String listarHabitantes(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
-        Pageable pageRequest = PageRequest.of(page, 4);
-        Page<HabitanteCalle> habitanteCalle = habitantecalleService.findAll(pageRequest);
-        PageRender<HabitanteCalle> pageRender = new PageRender<>("/listarHabitanteCalle", habitanteCalle);
+    public String listarHabitantes(Model modelo) {
+        List<HabitanteCalle> habitanteCalle = habitantecalleService.findAll();
         Date fechaActual = new Date();
         for (HabitanteCalle habitante : habitanteCalle) {
             Date fechaRegistro = habitante.getFechaRegistro();
@@ -378,7 +385,7 @@ public class HabitantecalleController {
         }
         modelo.addAttribute("titulo", "Agregar Población");
         modelo.addAttribute("habitanteCalle", habitanteCalle);
-        modelo.addAttribute("page", pageRender);
+        modelo.addAttribute("page", null);
         boolean mostrarAlerta = habitanteCalle.stream().anyMatch(HabitanteCalle::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarHabitanteCalle";

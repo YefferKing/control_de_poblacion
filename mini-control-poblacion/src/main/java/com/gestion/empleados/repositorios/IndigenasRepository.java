@@ -2,9 +2,11 @@ package com.gestion.empleados.repositorios;
 
 import com.gestion.empleados.entidades.HabitanteCalle;
 import com.gestion.empleados.entidades.Indigenas;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IndigenasRepository extends PagingAndSortingRepository<Indigenas, Long> {
@@ -18,4 +20,7 @@ public interface IndigenasRepository extends PagingAndSortingRepository<Indigena
             "h.primerApellido = :input OR " +
             "h.segundoApellido = :input)")
     List<Indigenas> findByAtributos(String input);
+
+    Indigenas findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento);
 }

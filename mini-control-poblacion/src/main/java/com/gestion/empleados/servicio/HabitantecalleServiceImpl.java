@@ -1,6 +1,7 @@
 package com.gestion.empleados.servicio;
 
 import com.gestion.empleados.entidades.HabitanteCalle;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import com.gestion.empleados.repositorios.HabitantecalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -85,5 +87,12 @@ public class HabitantecalleServiceImpl implements HabitantecalleService {
 
     public List<HabitanteCalle> findByAtributos(String primerNombre) {
         return habitantecalleRepository.findByAtributos(primerNombre);
+    }
+
+    @Override
+    public HabitanteCalle findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento) {
+        return habitantecalleRepository.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento);
     }
 }

@@ -3,6 +3,7 @@ package com.gestion.empleados.controlador;
 import com.gestion.empleados.entidades.Entidades;
 import com.gestion.empleados.entidades.Eps;
 import com.gestion.empleados.entidades.Indigenas;
+import com.gestion.empleados.entidades.PoblacionPrivada;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
 import com.gestion.empleados.servicio.IndigenasService;
@@ -184,14 +185,14 @@ public class IndigenasController {
         item7_1.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun7_1 = paragraphIzquierda.createRun();
 
-        itemrun7_1.setText("Dirección: " + indigenas.getDireccion());
+        itemrun7_1.setText("DIRECCIÓN: " + indigenas.getDireccion());
         itemrun7_1.addCarriageReturn();
 
         XWPFParagraph item7_2 = document.createParagraph();
         item7_2.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun7_2 = paragraphIzquierda.createRun();
 
-        itemrun7_2.setText("Nombre de resguardo: " + indigenas.getNombreResguardo());
+        itemrun7_2.setText("NOMBRE RESGUARDO: " + indigenas.getNombreResguardo());
         itemrun7_2.addCarriageReturn();
 
 
@@ -324,6 +325,17 @@ public class IndigenasController {
     @PostMapping("/formIndigenas")
     public String guardarIndigenas(@Valid Indigenas indigenas, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
         if (indigenas.getId() == null) {
+            Indigenas existingPPL = indigenasService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                    indigenas.getPrimerNombre(),
+                    indigenas.getSegundoNombre(),
+                    indigenas.getPrimerApellido(),
+                    indigenas.getSegundoApellido(),
+                    indigenas.getFechaNacimiento()
+            );
+            if (existingPPL != null) {
+                flash.addFlashAttribute("error_message", "Registro ya existe en la base de datos");
+                return "redirect:/formIndigenas?error=true";
+            }
             String nuevoConsecutivo = indigenasService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             indigenas.setConsecutivo(nuevoConsecutivo);
         }
@@ -333,7 +345,7 @@ public class IndigenasController {
         } else {
             indigenas.setTipoDocumento("MS");
         }
-        String mensaje = (indigenas.getId() != null) ? "El Indigenas ha sido editado con éxito" : "Indigenas de calle registrado con éxito";
+        String mensaje = (indigenas.getId() != null) ? "Indigena ha sido editado con éxito" : "Indigena registrado con éxito";
         indigenasService.save(indigenas);
         status.setComplete();
         flash.addFlashAttribute("success", mensaje);
@@ -371,10 +383,8 @@ public class IndigenasController {
     }
 
     @GetMapping({"/", "/listarIndigenas"})
-    public String listarIndigenas(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
-        Pageable pageRequest = PageRequest.of(page, 4);
-        Page<Indigenas> indigenas = indigenasService.findAll(pageRequest);
-        PageRender<Indigenas> pageRender = new PageRender<>("/listarIndigenas", indigenas);
+    public String listarIndigenas(Model modelo) {
+        List<Indigenas> indigenas = indigenasService.findAll();
         Date fechaActual = new Date();
         for (Indigenas ind : indigenas) {
             Date fechaRegistro = ind.getFechaRegistro();
@@ -389,7 +399,7 @@ public class IndigenasController {
         }
         modelo.addAttribute("titulo", "Agregar Indigena");
         modelo.addAttribute("indigenas", indigenas);
-        modelo.addAttribute("page", pageRender);
+        modelo.addAttribute("page", null);
         boolean mostrarAlerta = indigenas.stream().anyMatch(Indigenas::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarIndigenas";

@@ -1,9 +1,6 @@
 package com.gestion.empleados.controlador;
 
-import com.gestion.empleados.entidades.Adultos;
-import com.gestion.empleados.entidades.Entidades;
-import com.gestion.empleados.entidades.Eps;
-import com.gestion.empleados.entidades.Indigenas;
+import com.gestion.empleados.entidades.*;
 import com.gestion.empleados.servicio.AdultosService;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
@@ -187,7 +184,7 @@ public class AdultosController {
         item7_1.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun itemrun7_1 = paragraphIzquierda.createRun();
 
-        itemrun7_1.setText("Centro de protección: " + adultos.getCentroProteccion());
+        itemrun7_1.setText("CENTRO DE PROTECCIÓN: " + adultos.getCentroProteccion());
         itemrun7_1.addCarriageReturn();
 
         XWPFParagraph espacio2 = document.createParagraph();
@@ -317,13 +314,24 @@ public class AdultosController {
     }
 
     @PostMapping("/formAdultos")
-    public String guardarIAdultos(@Valid Adultos adultos, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+    public String guardarAdultos(@Valid Adultos adultos, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
         if (adultos.getId() == null) {
+            Adultos existingPPL = adultosService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                    adultos.getPrimerNombre(),
+                    adultos.getSegundoNombre(),
+                    adultos.getPrimerApellido(),
+                    adultos.getSegundoApellido(),
+                    adultos.getFechaNacimiento()
+            );
+            if (existingPPL != null) {
+                flash.addFlashAttribute("error_message", "Registro ya existe en la base de datos");
+                return "redirect:/formAdultos?error=true";
+            }
             String nuevoConsecutivo = adultosService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             adultos.setConsecutivo(nuevoConsecutivo);
         }
         adultos.setTipoDocumento("AS");
-        String mensaje = (adultos.getId() != null) ? "El Adulto ha sido editado con éxito" : "Adulto de calle registrado con éxito";
+        String mensaje = (adultos.getId() != null) ? "Adulto ha sido editado con éxito" : "Adulto de Libertad de calle registrado con éxito";
         adultosService.save(adultos);
         status.setComplete();
         flash.addFlashAttribute("success", mensaje);
@@ -361,10 +369,8 @@ public class AdultosController {
     }
 
     @GetMapping({"/", "/listarAdultos"})
-    public String listarAdultos(@RequestParam(name = "page", defaultValue = "0") int page, Model modelo) {
-        Pageable pageRequest = PageRequest.of(page, 4);
-        Page<Adultos> adultos = adultosService.findAll(pageRequest);
-        PageRender<Adultos> pageRender = new PageRender<>("/listarAdultos", adultos);
+    public String listarAdultos(Model modelo) {
+        List<Adultos> adultos = adultosService.findAll();
         Date fechaActual = new Date();
         for (Adultos adu : adultos) {
             Date fechaRegistro = adu.getFechaRegistro();
@@ -379,7 +385,7 @@ public class AdultosController {
         }
         modelo.addAttribute("titulo", "Agregar Adultos");
         modelo.addAttribute("adultos", adultos);
-        modelo.addAttribute("page", pageRender);
+        modelo.addAttribute("page", null);
         boolean mostrarAlerta = adultos.stream().anyMatch(Adultos::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarAdultos";

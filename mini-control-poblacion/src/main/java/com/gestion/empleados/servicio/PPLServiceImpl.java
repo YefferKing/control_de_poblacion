@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -86,6 +87,13 @@ public class PPLServiceImpl implements PPLService {
 
     public List<PoblacionPrivada> findByAtributos(String primerNombre) {
         return pplRepository.findByAtributos(primerNombre);
+    }
+
+    @Override
+    public PoblacionPrivada findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+            String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Date fechaNacimiento) {
+        return pplRepository.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
+                primerNombre, segundoNombre, primerApellido, segundoApellido, fechaNacimiento);
     }
 
 }
