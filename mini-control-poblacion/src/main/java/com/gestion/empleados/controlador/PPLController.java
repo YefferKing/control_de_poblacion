@@ -305,7 +305,7 @@ public class PPLController {
         model.addAttribute("listaEps", listaEps);
         model.addAttribute("listaEntidades", listaEntidades);
         modelo.put("poblacionPrivada", poblacionPrivada);
-        modelo.put("titulo", "Registro de Poblacion Privada de la Libertad");
+        modelo.put("titulo", "Registro de Población Privada de la Libertad");
         return "formPPL";
     }
 
@@ -344,7 +344,7 @@ public class PPLController {
             model.addAttribute("listaEps", listaEps);
             model.addAttribute("listaEntidades", listaEntidades);
             modelo.put("poblacionPrivada", poblacionPrivada);
-            modelo.put("titulo", "Actualización de Privado de Libertad");
+            modelo.put("titulo", "Actualización de Población Privada de Libertad");
         } else {
             flash.addFlashAttribute("error", "Privado de Libertad no existe en la base de datos");
             return "redirect:/listarPPL";

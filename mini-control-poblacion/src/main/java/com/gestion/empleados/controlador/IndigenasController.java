@@ -318,7 +318,7 @@ public class IndigenasController {
         model.addAttribute("listaEps", listaEps);
         model.addAttribute("listaEntidades", listaEntidades);
         modelo.put("indigenas", indigenas);
-        modelo.put("titulo", "Registro de Indigenas");
+        modelo.put("titulo", "Registro de Indígenas");
         return "formIndigenas";
     }
 
@@ -362,7 +362,7 @@ public class IndigenasController {
             model.addAttribute("listaEps", listaEps);
             model.addAttribute("listaEntidades", listaEntidades);
             modelo.put("indigenas", indigenas);
-            modelo.put("titulo", "Actualización de Indigenas");
+            modelo.put("titulo", "Actualización de Indígenas");
         } else {
             flash.addFlashAttribute("error", "El ID del Indigena no existe en la base de datos");
             return "redirect:/listarIndigenas";
