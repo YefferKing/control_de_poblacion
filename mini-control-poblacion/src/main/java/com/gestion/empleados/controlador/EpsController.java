@@ -14,12 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -47,15 +49,22 @@ public class EpsController {
     }
 
     @GetMapping({"/", "/listarEps"})
-    public String listarEps(@RequestParam(name = "page",defaultValue = "0") int page, Model modelo) {
-        Pageable pageRequest = PageRequest.of(page, 4);
-        Page<Eps> eps = epsService.findAll(pageRequest);
-        PageRender<Eps> pageRender = new PageRender<>("/listarEps", eps);
+    public String listarEps(Model modelo) {
+        List<Eps> eps = epsService.findAll();
 
         modelo.addAttribute("titulo","Agregar Eps");
         modelo.addAttribute("eps",eps);
-        modelo.addAttribute("page", pageRender);
+        modelo.addAttribute("page", null);
 
         return "listarEps";
+    }
+
+    @GetMapping("/eliminarEps/{id}")
+    public String eliminarEps(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+        if(id > 0) {
+            epsService.delete(id);
+            flash.addFlashAttribute("success", "Eliminado con exito");
+        }
+        return "redirect:/listarEps";
     }
 }

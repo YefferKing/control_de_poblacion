@@ -405,6 +405,15 @@ public class IndigenasController {
         return "listarIndigenas";
     }
 
+    @GetMapping("/eliminarIndigenas/{id}")
+    public String eliminarIndigenas(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+        if(id > 0) {
+            indigenasService.delete(id);
+            flash.addFlashAttribute("success", "Eliminado con exito");
+        }
+        return "redirect:/listarIndigenas";
+    }
+
     @GetMapping("/exportarIndigenasExcel")
     public void exportarListadoDeIndigenasEnExcel(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");

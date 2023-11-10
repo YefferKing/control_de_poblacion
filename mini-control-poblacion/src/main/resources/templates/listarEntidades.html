@@ -21,6 +21,7 @@
                     <th>ID</th>
                     <th>Codigo</th>
                     <th>Descripcion</th>
+                    <th sec:authorize="hasRole('ADMIN')">Eliminar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,6 +29,9 @@
                     <td th:text="${entidades.id}"></td>
                     <td th:text="${entidades.codigo}"></td>
                     <td th:text="${entidades.descripcion}"></td>
+                    <td sec:authorize="hasRole('ADMIN')"><a
+                            class="btn btn btn-dark btn-sm"
+                            th:href="@{/eliminarEntidades/} + ${entidades.id}">Eliminar</a></td>
                 </tr>
                 </tbody>
             </table>

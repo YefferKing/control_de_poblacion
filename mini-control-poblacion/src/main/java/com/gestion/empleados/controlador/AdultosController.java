@@ -391,6 +391,15 @@ public class AdultosController {
         return "listarAdultos";
     }
 
+    @GetMapping("/eliminarAdultos/{id}")
+    public String eliminarAdultos(@PathVariable(value = "id") Long id,RedirectAttributes flash) {
+        if(id > 0) {
+            adultosService.delete(id);
+            flash.addFlashAttribute("success", "Eliminado con exito");
+        }
+        return "redirect:/listarAdultos";
+    }
+
     @GetMapping("/exportarAdultosExcel")
     public void exportarListadoDeIndigenasEnExcel(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");

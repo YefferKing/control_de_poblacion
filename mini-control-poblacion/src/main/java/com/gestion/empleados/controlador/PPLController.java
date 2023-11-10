@@ -389,6 +389,15 @@ public class PPLController {
         return "listarPPL";
     }
 
+    @GetMapping("/eliminarPPL/{id}")
+    public String eliminarPPL(@PathVariable(value = "id") Long id,RedirectAttributes flash) {
+        if(id > 0) {
+            pplService.delete(id);
+            flash.addFlashAttribute("success", "Eliminado con exito");
+        }
+        return "redirect:/listarPPL";
+    }
+
     @GetMapping("/exportarPPLExcel")
     public void exportarListadoDeHabitanteCalleEnExcel(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");

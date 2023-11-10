@@ -391,6 +391,15 @@ public class HabitantecalleController {
         return "listarHabitanteCalle";
     }
 
+    @GetMapping("/eliminarHabitanteCalle/{id}")
+    public String eliminarHabitanteCalle(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+        if(id > 0) {
+            habitantecalleService.delete(id);
+            flash.addFlashAttribute("success", "Eliminado con exito");
+        }
+        return "redirect:/listarHabitanteCalle";
+    }
+
     @GetMapping("/exportarHabitanteExcel")
     public void exportarListadoDeHabitanteCalleEnExcel(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");

@@ -21,6 +21,7 @@
           <th>ID</th>
           <th>Codigo</th>
           <th>Descripcion</th>
+          <th sec:authorize="hasRole('ADMIN')">Eliminar</th>
         </tr>
         </thead>
         <tbody>
@@ -28,6 +29,9 @@
           <td th:text="${eps.id}"></td>
           <td th:text="${eps.codigo}"></td>
           <td th:text="${eps.descripcion}"></td>
+          <td sec:authorize="hasRole('ADMIN')"><a
+                  class="btn btn btn-dark btn-sm"
+                  th:href="@{/eliminarEps/} + ${eps.id}">Eliminar</a></td>
         </tr>
         </tbody>
       </table>

@@ -384,6 +384,15 @@ public class MenoresICBFController {
         return "listarMenoresICBF";
     }
 
+    @GetMapping("/eliminarMenoresICBF/{id}")
+    public String eliminarMenoresICBF(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+        if(id > 0) {
+            menoresICBFService.delete(id);
+            flash.addFlashAttribute("success", "Eliminado con exito");
+        }
+        return "redirect:/listarMenoresICBF";
+    }
+
     @GetMapping("/exportarMenoresICBFExcel")
     public void exportarListadoDeIndigenasEnExcel(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");

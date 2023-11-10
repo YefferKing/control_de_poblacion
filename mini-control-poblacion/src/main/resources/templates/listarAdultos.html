@@ -52,8 +52,9 @@
           <th>Tipo Documento Actual</th>
           <th>Numero Documento Actual</th>
           <th>Estado</th>
-          <th sec:authorize="hasRole('ADMIN')">Editar</th>
-          <th sec:authorize="hasRole('ADMIN')">PDF</th>
+          <th>Editar</th>
+          <th sec:authorize="hasRole('ADMIN')">Eliminar</th>
+          <th>CERT</th>
         </tr>
         </thead>
         <tbody>
@@ -72,12 +73,15 @@
             <button type="button" th:style="${adultos.alerta} ? 'background-color: red; color: white; width: 30px; height: 30px;' : 'background-color: green; color: white; width: 30px; height: 30px;'">
             </button>
           </td>
-          <td sec:authorize="hasRole('ADMIN')"><a
+          <td><a
                   class="btn btn-warning btn-sm"
                   th:href="@{/editAdultos/} + ${adultos.id}">Editar</a></td>
           <td sec:authorize="hasRole('ADMIN')"><a
+                  class="btn btn btn-dark btn-sm"
+                  th:href="@{/eliminarAdultos/} + ${adultos.id}">Eliminar</a></td>
+          <td><a
                   class="btn btn-danger btn-sm"
-                  th:href="@{/certificadoAdultos/} + ${adultos.id}">PDF</a></td>
+                  th:href="@{/certificadoAdultos/} + ${adultos.id}">CERT</a></td>
         </tr>
         </tbody>
       </table>
