@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -307,7 +309,7 @@ public class MenoresICBFController {
     }
 
     @PostMapping("/formMenoresICBF")
-    public String guardaMenoresICBF(@Valid MenoresICBF menoresICBF, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+    public String guardaMenoresICBF(@Valid MenoresICBF menoresICBF, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status, @RequestParam("archivoAdjunto") MultipartFile archivoAdjunto) {
         if (menoresICBF.getId() == null) {
             MenoresICBF existingPPL = menoresICBFService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
                     menoresICBF.getPrimerNombre(),
@@ -322,6 +324,21 @@ public class MenoresICBFController {
             }
             String nuevoConsecutivo = menoresICBFService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             menoresICBF.setConsecutivo(nuevoConsecutivo);
+        }
+        if (!archivoAdjunto.isEmpty()) {
+            try {
+                String tipoMIME = archivoAdjunto.getContentType();
+
+                if (!tipoMIME.equals(MediaType.APPLICATION_PDF_VALUE)) {
+                    flash.addFlashAttribute("error_message", "El archivo adjunto debe ser un PDF.");
+                    return "redirect:/formMenoresICBF?error_doc=true";
+                }
+                byte[] bytesArchivo = archivoAdjunto.getBytes();
+                menoresICBF.setArchivoAdjunto(bytesArchivo);
+            } catch (IOException e) {
+                flash.addFlashAttribute("error_message", "Error al procesar el archivo adjunto.");
+                return "redirect:/formMenoresICBF?error_doc=true";
+            }
         }
         menoresICBF.setTipoDocumento("MS");
         String mensaje = (menoresICBF.getId() != null) ? "Menor ICBF ha sido editado con éxito" : "Menor ICBF registrado con éxito";
@@ -382,6 +399,19 @@ public class MenoresICBFController {
         boolean mostrarAlerta = menoresICBF.stream().anyMatch(MenoresICBF::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarMenoresICBF";
+    }
+
+    @GetMapping("/descargarICBF/{id}")
+    public ResponseEntity<byte[]> descargarICBF(@PathVariable Long id) {
+        MenoresICBF menoresICBF = menoresICBFService.findOne(id);
+        if (menoresICBF != null && menoresICBF.getArchivoAdjunto() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "archivo_adjunto_" + id + ".pdf");
+            return new ResponseEntity<>(menoresICBF.getArchivoAdjunto(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/eliminarMenoresICBF/{id}")

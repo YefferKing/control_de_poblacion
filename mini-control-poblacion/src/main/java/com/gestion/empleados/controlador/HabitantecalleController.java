@@ -1,10 +1,7 @@
 package com.gestion.empleados.controlador;
 
 
-import com.gestion.empleados.entidades.Entidades;
-import com.gestion.empleados.entidades.Eps;
-import com.gestion.empleados.entidades.HabitanteCalle;
-import com.gestion.empleados.entidades.PoblacionPrivada;
+import com.gestion.empleados.entidades.*;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
 import com.gestion.empleados.servicio.HabitantecalleService;
@@ -25,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -308,7 +307,7 @@ public class HabitantecalleController {
     }
 
     @PostMapping("/formHabitanteCalle")
-    public String guardarHabitanteCalle(@Valid HabitanteCalle habitanteCalle, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+    public String guardarHabitanteCalle(@Valid HabitanteCalle habitanteCalle, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status, @RequestParam("archivoAdjunto") MultipartFile archivoAdjunto) {
         if (habitanteCalle.getId() == null) {
             HabitanteCalle existingPPL = habitantecalleService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
                     habitanteCalle.getPrimerNombre(),
@@ -323,6 +322,21 @@ public class HabitantecalleController {
             }
             String nuevoConsecutivo = habitantecalleService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             habitanteCalle.setConsecutivo(nuevoConsecutivo);
+        }
+        if (!archivoAdjunto.isEmpty()) {
+            try {
+                String tipoMIME = archivoAdjunto.getContentType();
+
+                if (!tipoMIME.equals(MediaType.APPLICATION_PDF_VALUE)) {
+                    flash.addFlashAttribute("error_message", "El archivo adjunto debe ser un PDF.");
+                    return "redirect:/formHabitanteCalle?error_doc=true";
+                }
+                byte[] bytesArchivo = archivoAdjunto.getBytes();
+                habitanteCalle.setArchivoAdjunto(bytesArchivo);
+            } catch (IOException e) {
+                flash.addFlashAttribute("error_message", "Error al procesar el archivo adjunto.");
+                return "redirect:/formHabitanteCalle?error_doc=true";
+            }
         }
         int edad = calcularEdad(habitanteCalle.getFechaNacimiento());
         if (edad >= 18) {
@@ -389,6 +403,19 @@ public class HabitantecalleController {
         boolean mostrarAlerta = habitanteCalle.stream().anyMatch(HabitanteCalle::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarHabitanteCalle";
+    }
+
+    @GetMapping("/descargarHabitanteCalle/{id}")
+    public ResponseEntity<byte[]> descargarHabitanteCalle(@PathVariable Long id) {
+        HabitanteCalle habitanteCalle = habitantecalleService.findOne(id);
+        if (habitanteCalle != null && habitanteCalle.getArchivoAdjunto() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "archivo_adjunto_" + id + ".pdf");
+            return new ResponseEntity<>(habitanteCalle.getArchivoAdjunto(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/eliminarHabitanteCalle/{id}")

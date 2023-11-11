@@ -57,6 +57,8 @@ public class HabitanteCalle {
 
     private String nombreFuncionario;
 
+    @Lob
+    private byte[] archivoAdjunto;
 
     public HabitanteCalle() { super(); }
 
@@ -166,5 +168,13 @@ public class HabitanteCalle {
 
     public void setNombreFuncionario(String nombreFuncionario) {
         this.nombreFuncionario = nombreFuncionario;
+    }
+
+    public byte[] getArchivoAdjunto() {
+        return archivoAdjunto;
+    }
+
+    public void setArchivoAdjunto(byte[] archivoAdjunto) {
+        this.archivoAdjunto = archivoAdjunto;
     }
 }

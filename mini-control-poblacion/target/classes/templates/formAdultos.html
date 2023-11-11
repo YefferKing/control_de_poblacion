@@ -23,8 +23,18 @@
           </button>
         </div>
       </div>
+      <div th:if="${param.error_doc}">
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+          <p style="margin: 0;">
+            El archivo adjunto debe ser un PDF.
+          </p>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
       <div class="card-body">
-        <form th:action="@{/formAdultos}" th:object="${adultos}" method="post">
+        <form th:action="@{/formAdultos}" th:object="${adultos}" method="post" enctype="multipart/form-data">
           <input type="hidden" th:field="*{id}" th:value="${adultos.id}"/>
           <div class="form-group">
             <input type="hidden" name="consecutivo" th:field="*{consecutivo}" th:value="${adultos.consecutivo}" />
@@ -79,6 +89,10 @@
             <div class="form-group">
               <label>Centro Proteccion : </label>
               <input type="text" th:field="*{centroProteccion}" class="form-control" th:errorclass="'form-control alert-danger'" required/>
+            </div>
+            <div class="form-group">
+              <label>Adjuntar Constancia : </label>
+              <input type="file" name="archivoAdjunto" class="form-control-file" required accept=".pdf"/>
             </div>
             <div th:if="${adultos.id != null}">
               <div class="form-group">

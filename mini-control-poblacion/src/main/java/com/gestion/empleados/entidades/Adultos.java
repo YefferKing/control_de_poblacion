@@ -58,6 +58,9 @@ public class Adultos {
 
     private String centroProteccion;
 
+    @Lob
+    private byte[] archivoAdjunto;
+
     public Adultos() { super(); }
 
     public Long getId() {
@@ -174,5 +177,13 @@ public class Adultos {
 
     public void setCentroProteccion(String centroProteccion) {
         this.centroProteccion = centroProteccion;
+    }
+
+    public byte[] getArchivoAdjunto() {
+        return archivoAdjunto;
+    }
+
+    public void setArchivoAdjunto(byte[] archivoAdjunto) {
+        this.archivoAdjunto = archivoAdjunto;
     }
 }

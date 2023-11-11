@@ -59,6 +59,9 @@ public class Indigenas {
 
     private String direccion;
 
+    @Lob
+    private byte[] archivoAdjunto;
+
     public Indigenas() { super(); }
 
     public Long getId() {
@@ -183,5 +186,13 @@ public class Indigenas {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public byte[] getArchivoAdjunto() {
+        return archivoAdjunto;
+    }
+
+    public void setArchivoAdjunto(byte[] archivoAdjunto) {
+        this.archivoAdjunto = archivoAdjunto;
     }
 }

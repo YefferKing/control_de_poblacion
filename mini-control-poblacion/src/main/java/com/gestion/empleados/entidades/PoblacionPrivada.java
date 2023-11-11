@@ -58,6 +58,9 @@ public class PoblacionPrivada {
 
     private String nombreFuncionario;
 
+    @Lob
+    private byte[] archivoAdjunto;
+
 
     public PoblacionPrivada() { super(); }
 
@@ -167,6 +170,14 @@ public class PoblacionPrivada {
 
     public void setNombreFuncionario(String nombreFuncionario) {
         this.nombreFuncionario = nombreFuncionario;
+    }
+
+    public byte[] getArchivoAdjunto() {
+        return archivoAdjunto;
+    }
+
+    public void setArchivoAdjunto(byte[] archivoAdjunto) {
+        this.archivoAdjunto = archivoAdjunto;
     }
 
 }

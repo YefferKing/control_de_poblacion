@@ -52,9 +52,10 @@
           <th>Tipo Documento Actual</th>
           <th>Numero Documento Actual</th>
           <th>Estado</th>
+          <th>CONST</th>
           <th>Editar</th>
           <th sec:authorize="hasRole('ADMIN')">Eliminar</th>
-          <th>CERT</th>
+          <th sec:authorize="hasRole('ADMIN')">CERT</th>
         </tr>
         </thead>
         <tbody>
@@ -73,13 +74,21 @@
             <button type="button" th:style="${adultos.alerta} ? 'background-color: red; color: white; width: 30px; height: 30px;' : 'background-color: green; color: white; width: 30px; height: 30px;'">
             </button>
           </td>
+          <td>
+            <span th:if="${adultos.archivoAdjunto != null}">
+                <a th:href="@{/descargarAdultos/} + ${adultos.id}">
+                    <img src="https://img.icons8.com/?size=32&id=14100&format=png" title="Descargar">
+                </a>
+            </span>
+            <span th:unless="${adultos.archivoAdjunto != null}">N/A</span>
+          </td>
           <td><a
                   class="btn btn-warning btn-sm"
                   th:href="@{/editAdultos/} + ${adultos.id}">Editar</a></td>
           <td sec:authorize="hasRole('ADMIN')"><a
                   class="btn btn btn-dark btn-sm"
                   th:href="@{/eliminarAdultos/} + ${adultos.id}">Eliminar</a></td>
-          <td><a
+          <td sec:authorize="hasRole('ADMIN')"><a
                   class="btn btn-danger btn-sm"
                   th:href="@{/certificadoAdultos/} + ${adultos.id}">CERT</a></td>
         </tr>

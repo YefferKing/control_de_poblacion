@@ -1,9 +1,6 @@
 package com.gestion.empleados.controlador;
 
-import com.gestion.empleados.entidades.Entidades;
-import com.gestion.empleados.entidades.Eps;
-import com.gestion.empleados.entidades.HabitanteCalle;
-import com.gestion.empleados.entidades.PoblacionPrivada;
+import com.gestion.empleados.entidades.*;
 import com.gestion.empleados.servicio.EntidadesService;
 import com.gestion.empleados.servicio.EpsService;
 import com.gestion.empleados.servicio.HabitantecalleService;
@@ -21,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -310,7 +309,7 @@ public class PPLController {
     }
 
     @PostMapping("/formPPL")
-    public String guardarPPL(@Valid PoblacionPrivada poblacionPrivada, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+    public String guardarPPL(@Valid PoblacionPrivada poblacionPrivada, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status, @RequestParam("archivoAdjunto") MultipartFile archivoAdjunto) {
         if (poblacionPrivada.getId() == null) {
             PoblacionPrivada existingPPL = pplService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
                     poblacionPrivada.getPrimerNombre(),
@@ -325,6 +324,21 @@ public class PPLController {
             }
             String nuevoConsecutivo = pplService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             poblacionPrivada.setConsecutivo(nuevoConsecutivo);
+        }
+        if (!archivoAdjunto.isEmpty()) {
+            try {
+                String tipoMIME = archivoAdjunto.getContentType();
+
+                if (!tipoMIME.equals(MediaType.APPLICATION_PDF_VALUE)) {
+                    flash.addFlashAttribute("error_message", "El archivo adjunto debe ser un PDF.");
+                    return "redirect:/formPPL?error_doc=true";
+                }
+                byte[] bytesArchivo = archivoAdjunto.getBytes();
+                poblacionPrivada.setArchivoAdjunto(bytesArchivo);
+            } catch (IOException e) {
+                flash.addFlashAttribute("error_message", "Error al procesar el archivo adjunto.");
+                return "redirect:/formPPL?error_doc=true";
+            }
         }
         poblacionPrivada.setTipoDocumento("AS");
         String mensaje = (poblacionPrivada.getId() != null) ? "Privado de Libertad ha sido editado con éxito" : "Privado de Libertad registrado con éxito";
@@ -396,6 +410,19 @@ public class PPLController {
             flash.addFlashAttribute("success", "Eliminado con exito");
         }
         return "redirect:/listarPPL";
+    }
+
+    @GetMapping("/descargarPPL/{id}")
+    public ResponseEntity<byte[]> descargarICBF(@PathVariable Long id) {
+        PoblacionPrivada poblacionPrivada = pplService.findOne(id);
+        if (poblacionPrivada != null && poblacionPrivada.getArchivoAdjunto() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "archivo_adjunto_" + id + ".pdf");
+            return new ResponseEntity<>(poblacionPrivada.getArchivoAdjunto(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/exportarPPLExcel")

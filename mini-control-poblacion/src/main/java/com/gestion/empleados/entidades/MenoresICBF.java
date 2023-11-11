@@ -56,6 +56,9 @@ public class MenoresICBF {
 
     private String nombreFuncionario;
 
+    @Lob
+    private byte[] archivoAdjunto;
+
     public MenoresICBF() { super(); }
 
     public Long getId() {
@@ -166,4 +169,11 @@ public class MenoresICBF {
         this.nombreFuncionario = nombreFuncionario;
     }
 
+    public byte[] getArchivoAdjunto() {
+        return archivoAdjunto;
+    }
+
+    public void setArchivoAdjunto(byte[] archivoAdjunto) {
+        this.archivoAdjunto = archivoAdjunto;
+    }
 }

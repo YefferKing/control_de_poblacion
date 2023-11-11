@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -314,7 +316,7 @@ public class AdultosController {
     }
 
     @PostMapping("/formAdultos")
-    public String guardarAdultos(@Valid Adultos adultos, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status) {
+    public String guardarAdultos(@Valid Adultos adultos, BindingResult result, Model modelo, RedirectAttributes flash, SessionStatus status, @RequestParam("archivoAdjunto") MultipartFile archivoAdjunto) {
         if (adultos.getId() == null) {
             Adultos existingPPL = adultosService.findByPrimerNombreAndSegundoNombreAndPrimerApellidoAndSegundoApellidoAndFechaNacimiento(
                     adultos.getPrimerNombre(),
@@ -329,6 +331,21 @@ public class AdultosController {
             }
             String nuevoConsecutivo = adultosService.obtenerUltimoConsecutivoDesdeBaseDeDatos();
             adultos.setConsecutivo(nuevoConsecutivo);
+        }
+        if (!archivoAdjunto.isEmpty()) {
+            try {
+                String tipoMIME = archivoAdjunto.getContentType();
+
+                if (!tipoMIME.equals(MediaType.APPLICATION_PDF_VALUE)) {
+                    flash.addFlashAttribute("error_message", "El archivo adjunto debe ser un PDF.");
+                    return "redirect:/formAdultos?error_doc=true";
+                }
+                byte[] bytesArchivo = archivoAdjunto.getBytes();
+                adultos.setArchivoAdjunto(bytesArchivo);
+            } catch (IOException e) {
+                flash.addFlashAttribute("error_message", "Error al procesar el archivo adjunto.");
+                return "redirect:/formAdultos?error_doc=true";
+            }
         }
         adultos.setTipoDocumento("AS");
         String mensaje = (adultos.getId() != null) ? "Adulto ha sido editado con éxito" : "Adulto de Libertad de calle registrado con éxito";
@@ -389,6 +406,19 @@ public class AdultosController {
         boolean mostrarAlerta = adultos.stream().anyMatch(Adultos::isAlerta);
         modelo.addAttribute("mostrarAlerta", mostrarAlerta);
         return "listarAdultos";
+    }
+
+    @GetMapping("/descargarAdultos/{id}")
+    public ResponseEntity<byte[]> descargarICBF(@PathVariable Long id) {
+        Adultos adultos = adultosService.findOne(id);
+        if (adultos != null && adultos.getArchivoAdjunto() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "archivo_adjunto_" + id + ".pdf");
+            return new ResponseEntity<>(adultos.getArchivoAdjunto(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/eliminarAdultos/{id}")
